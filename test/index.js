@@ -62,12 +62,23 @@ describe('Bus API', function() {
   });
 
   it('.getBusScheduleByStop', function(done) {
-
-    return done();
+    client.getBusScheduleByStop('2000019', '2014-09-19', function(err, data) {
+      if (err) return done(err);
+      data.should.be.json;
+      data.should.have.property('ScheduleArrivals');
+      data.should.have.property('Stop');
+      data.ScheduleArrivals[0].should.have.keys('DirectionNum', 'EndTime', 'RouteID', 'ScheduleTime', 'StartTime', 'TripDirectionText', 'TripHeadsign', 'TripID');
+      return done();
+    });
   });
 
   it('.getBusPrediction', function(done) {
-    return done();
+    client.getBusPrediction('1001343', function(err, data) {
+      if (err) return done(err);
+      data.should.be.json;
+      data[0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID');
+      return done();
+    });
   });
 
 });

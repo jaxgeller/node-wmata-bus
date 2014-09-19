@@ -55,6 +55,7 @@ exports.getBusRouteDetails = function(id, date, done){
   });
 }
 
+
 // /Bus.svc/json/jBusPositions?routeId=10A&includingVariations=true&lat=0&lon=0&radius=0&api_key=n7ch87y8fapve2g8dukccnbv
 exports.getBusPositions = function(id, variation, loc, radius, done) {
   var route = '/Bus.svc/json/jBusPositions?routeId='+id+'&includingVariations='+variation+'&lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
@@ -64,12 +65,23 @@ exports.getBusPositions = function(id, variation, loc, radius, done) {
   });
 }
 
-// /Bus.svc/json/jStopSchedule?stopId=2000019&date=2014-09-19&api_key=n7ch87y8fapve2g8dukccnbv
-exports.getBusScheduleByStop = function() {
 
+// /Bus.svc/json/jStopSchedule?stopId=2000019&date=2014-09-19&api_key=n7ch87y8fapve2g8dukccnbv
+exports.getBusScheduleByStop = function(id, date, done) {
+  var route = '/Bus.svc/json/jStopSchedule?stopId='+id+'&date='+date+'&';
+  get(this.url(route), function(err, data) {
+    if (err) return done(err);
+    return done(null, data);
+  });
 }
 
-// /NextBusService.svc/json/jPredictions?StopID=1001888&api_key=n7ch87y8fapve2g8dukccnbv
-exports.getBusPrediction = function() {
 
+// /NextBusService.svc/json/jPredictions?StopID=1001888&api_key=n7ch87y8fapve2g8dukccnbv
+exports.getBusPrediction = function(id, done) {
+  var route = '/NextBusService.svc/json/jPredictions?StopID='+id+'&';
+  console.log(this.url(route));
+  get(this.url(route), function(err, data) {
+    if (err) return done(err);
+    return done(null, data.Predictions);
+  });
 }
