@@ -2,8 +2,8 @@
   "name": "wmata-bus-js",
   "version": "1.0.0",
   "description": "",
-  "keywords": [],
-  "main": "",
+  "keywords": ["bus api", "metro bus", "wmata bus", "wmata bus api", "wmata api"],
+  "main": "index.js",
   "dependencies": {
     "request": "^2.44.0"
   },
@@ -14,10 +14,10 @@
   "scripts": {
     "test": "mocha"
   },
-  "author": "",
+  "author": "@JaxGeller",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jacksongeller/wmata-bus-js.git"
+    "url": "https://github.com/jacksongeller/wmata-bus.js"
   }
 }
