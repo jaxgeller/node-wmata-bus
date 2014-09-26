@@ -72,7 +72,6 @@ exports.getBusScheduleByStop = function(id, date, done) {
 
 exports.getBusPrediction = function(id, done) {
   var route = '/NextBusService.svc/json/jPredictions?StopID='+id+'&';
-  console.log(this.url(route));
   get(this.url(route), function(err, data) {
     if (err) return done(err);
     return done(null, data.Predictions);

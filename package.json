@@ -1,6 +1,6 @@
 {
   "name": "wmata-bus-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "keywords": ["bus api", "metro bus", "wmata bus", "wmata bus api", "wmata api"],
   "main": "index.js",
