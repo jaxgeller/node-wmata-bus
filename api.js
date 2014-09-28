@@ -15,7 +15,6 @@ function get(url, done) {
 }
 
 
-
 exports.getBusRoutes = function(done) {
   var route = '/Bus.svc/json/jRoutes?'
   get(this.url(route), function(err, data) {
@@ -75,5 +74,30 @@ exports.getBusPrediction = function(id, done) {
   get(this.url(route), function(err, data) {
     if (err) return done(err);
     return done(null, data.Predictions);
+  });
+}
+
+
+exports.getClosestPrediction = function(loc, radius, limit, done) {
+  var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
+  var self = this;
+  get(self.url(route), function(err, data) {
+    if (err) return done(err);
+    else {
+      try {
+        data = data.Stops.slice(0, limit);
+        console.log(data);
+      } catch(e) {
+        return done(e);
+      }
+      for (var i in data) {
+        console.log(data[i].StopID)
+        var route = '/NextBusService.svc/json/jPredictions?StopID='+data[i].StopID+'&';
+        get(self.url(route), function(err, dataR) {
+          if (err) return done(err);
+          else return done(null, );
+        });
+      }
+    }
   });
 }

@@ -9,7 +9,6 @@ var location = {
 
 describe('Bus API', function() {
 
-
   it('.getBusRoutes', function(done) {
     client.getBusRoutes(function(err, data) {
       if (err) return done(err);
@@ -81,4 +80,11 @@ describe('Bus API', function() {
     });
   });
 
+  it('.getClosestPrediction', function(done) {
+    this.timeout(5000);
+    client.getClosestPrediction(location, 500, 3, function(err, data) {
+      if (err) return done(err);
+      console.log(data);
+    });
+  });
 });
