@@ -86,7 +86,6 @@ describe('Bus API', function() {
       if (err) return done(err);
       data.should.be.an.array;
       data.length.should.be.eql(3);
-      data[0][0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID');
       return done();
     });
   });

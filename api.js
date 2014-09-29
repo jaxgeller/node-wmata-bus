@@ -92,7 +92,7 @@ exports.getClosestPrediction = function(loc, radius, limit, done) {
         var route = '/NextBusService.svc/json/jPredictions?StopID='+stops.StopID+'&';
         get(self.url(route), function(err, res) {
           if (err) return cb(err);
-          else return cb(null, res.Predictions);
+          else return cb(null, {name: stops.Name, data: res.Predictions});
         });
       }, function(e, r) {
         if (e) return done(e);
