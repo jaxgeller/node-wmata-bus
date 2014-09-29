@@ -60,12 +60,22 @@ var client = new Bus('api key here');
 + `callback(err, data)`
 + returns bus predictions for a specific bus
 
+#### .getClosestPrediction(location, radius, limit, callback)
++ `location` object `{lat: number, lon: number}`
++ `radius` number
++ `limit` number - limit to how many stops you want
++ returns the closest stops within a limit and radius's prediction times.
+
 ---
 ### Examples
 
 ```js
 var Bus = require('wmata-bus-js');
 var client = new Bus('api key here');
+var location = {
+  lat: 41,
+  lon: 39
+}
 
 client.getBusRoutes(function(err, data) {
   // do something with data
@@ -95,4 +105,7 @@ client.getBusPrediction('1001343', function(err, data) {
   // do something with data
 });
 
+client.getClosestPrediction(location, 500, 3, function(err, data) {
+  // do something with data
+});
 ```
