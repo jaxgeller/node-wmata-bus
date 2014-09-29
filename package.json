@@ -2,9 +2,16 @@
   "name": "wmata-bus-js",
   "version": "1.0.1",
   "description": "",
-  "keywords": ["bus api", "metro bus", "wmata bus", "wmata bus api", "wmata api"],
+  "keywords": [
+    "bus api",
+    "metro bus",
+    "wmata bus",
+    "wmata bus api",
+    "wmata api"
+  ],
   "main": "index.js",
   "dependencies": {
+    "async": "^0.9.0",
     "request": "^2.44.0"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 var request = require('request');
-
+var async = require('async');
 
 
 function get(url, done) {
@@ -77,27 +77,29 @@ exports.getBusPrediction = function(id, done) {
   });
 }
 
-
 exports.getClosestPrediction = function(loc, radius, limit, done) {
   var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   var self = this;
-  get(self.url(route), function(err, data) {
+  get(this.url(route), function(err, data) {
     if (err) return done(err);
     else {
       try {
         data = data.Stops.slice(0, limit);
-        console.log(data);
       } catch(e) {
         return done(e);
       }
-      for (var i in data) {
-        console.log(data[i].StopID)
-        var route = '/NextBusService.svc/json/jPredictions?StopID='+data[i].StopID+'&';
-        get(self.url(route), function(err, dataR) {
-          if (err) return done(err);
-          else return done(null, );
+      async.map(data, function(stops, cb){
+        var route = '/NextBusService.svc/json/jPredictions?StopID='+stops.StopID+'&';
+        get(self.url(route), function(err, res) {
+          if (err) return cb(err);
+          else return cb(null, res.Predictions);
         });
-      }
+      }, function(e, r) {
+        if (e) return done(e);
+        else return done(null, r);
+      });
     }
   });
 }
+
+
