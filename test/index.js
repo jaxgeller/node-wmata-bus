@@ -84,10 +84,9 @@ describe('Bus API', function() {
     this.timeout(5000);
     client.getClosestPrediction(location, 500, 3, function(err, data) {
       if (err) return done(err);
-      console.log(data);
       data.should.be.an.array;
       data.length.should.be.eql(3);
-      // data[0][0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID');
+      data[0][0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID');
       return done();
     });
   });

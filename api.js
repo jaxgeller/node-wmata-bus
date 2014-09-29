@@ -91,13 +91,8 @@ exports.getClosestPrediction = function(loc, radius, limit, done) {
       async.map(data, function(stops, cb){
         var route = '/NextBusService.svc/json/jPredictions?StopID='+stops.StopID+'&';
         get(self.url(route), function(err, res) {
-          var holder = {};
-          
           if (err) return cb(err);
-          else {
-            holder[stops.StopID] = res.Predictions;
-            return cb(null, holder);
-          }
+          else return cb(null, res.Predictions);
         });
       }, function(e, r) {
         if (e) return done(e);
