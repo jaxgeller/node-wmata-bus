@@ -103,3 +103,26 @@ exports.getClosestPrediction = function(loc, radius, limit, done) {
 }
 
 
+exports.getPredictionSeries = function(arr, done) {
+  var self = this;
+  async.mapSeries(arr, function(item, callback){
+    setTimeout(function() {
+      self.getBusPrediction(item, function(err, data) {
+        if (err) return callback(err);
+        if (data) {
+          return callback(null, {station: item, data: data.slice(0,3)});
+        }
+      });
+    }, 250);
+  }, function(err, results){
+    if (err) return done(err);
+    else return done(null, results);
+  });
+}
+
+
+
+
+
+
+

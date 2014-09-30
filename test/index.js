@@ -1,6 +1,6 @@
 var should = require('chai').should();
 var Bus = require('../');
-var client = new Bus(process.env.PASSWORD);
+var client = new Bus(process.env.KEY);
 
 var location = {
   lat: 38.9059581,
@@ -40,36 +40,36 @@ describe('Bus API', function() {
     });
   });
 
-  it('.getBusRouteDetails', function(done) {
-    client.getBusRouteDetails('16L', '2014-09-19', function(err, data) {
-      if (err) return done(err);
-      data.should.be.json;
-      data.RouteID.should.eql('16L');
-      data.should.have.property('Direction0');
-      data.should.have.property('Direction1');
-      return done();
-    });
-  });
+  // it('.getBusRouteDetails', function(done) {
+  //   client.getBusRouteDetails('16L', '2014-09-19', function(err, data) {
+  //     if (err) return done(err);
+  //     data.should.be.json;
+  //     data.RouteID.should.eql('16L');
+  //     data.should.have.property('Direction0');
+  //     data.should.have.property('Direction1');
+  //     return done();
+  //   });
+  // });
 
-  it('.getBusPositions', function(done) {
-    client.getBusPositions('10A', 'true', location, 500, function(err, data) {
-      if (err) return done(err);
-      data.should.be.json;
-      data.should.be.an.array;
-      return done();
-    });
-  });
+  // it('.getBusPositions', function(done) {
+  //   client.getBusPositions('10A', 'true', location, 500, function(err, data) {
+  //     if (err) return done(err);
+  //     data.should.be.json;
+  //     data.should.be.an.array;
+  //     return done();
+  //   });
+  // });
 
-  it('.getBusScheduleByStop', function(done) {
-    client.getBusScheduleByStop('2000019', '2014-09-19', function(err, data) {
-      if (err) return done(err);
-      data.should.be.json;
-      data.should.have.property('ScheduleArrivals');
-      data.should.have.property('Stop');
-      data.ScheduleArrivals[0].should.have.keys('DirectionNum', 'EndTime', 'RouteID', 'ScheduleTime', 'StartTime', 'TripDirectionText', 'TripHeadsign', 'TripID');
-      return done();
-    });
-  });
+  // it('.getBusScheduleByStop', function(done) {
+  //   client.getBusScheduleByStop('2000019', '2014-09-19', function(err, data) {
+  //     if (err) return done(err);
+  //     data.should.be.json;
+  //     data.should.have.property('ScheduleArrivals');
+  //     data.should.have.property('Stop');
+  //     data.ScheduleArrivals[0].should.have.keys('DirectionNum', 'EndTime', 'RouteID', 'ScheduleTime', 'StartTime', 'TripDirectionText', 'TripHeadsign', 'TripID');
+  //     return done();
+  //   });
+  // });
 
   it('.getBusPrediction', function(done) {
     client.getBusPrediction('1001343', function(err, data) {
@@ -80,13 +80,29 @@ describe('Bus API', function() {
     });
   });
 
-  it('.getClosestPrediction', function(done) {
-    this.timeout(5000);
-    client.getClosestPrediction(location, 500, 3, function(err, data) {
+  // it('.getClosestPrediction', function(done) {
+  //   this.timeout(5000);
+  //   client.getClosestPrediction(location, 500, 3, function(err, data) {
+  //     if (err) return done(err);
+  //     data.should.be.an.array;
+  //     data.length.should.be.eql(3);
+  //     return done();
+  //   });
+  // });
+  // 
+  it('.getSeries', function(done) {
+    this.timeout(60 * 5 * 1000);
+    client.getPredictionSeries(['1001343','1001334','1001352', '6000712', '6001310', '6000827', '5001986', '5001976', '5004706', '2000098', '2000096', '2001227'], function(err, data) {
       if (err) return done(err);
-      data.should.be.an.array;
-      data.length.should.be.eql(3);
-      return done();
-    });
-  });
+      else {
+        console.log(data);
+        return done();
+      }
+    })
+  })
+
+
+
+
+
 });
