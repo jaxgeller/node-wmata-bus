@@ -1,21 +1,47 @@
 var request = require('request');
 var async = require('async');
 
-
 function get(url, done) {
-  request(url, function(err, res, body) {
-    if (err) return done(err);
-    if (res.statusCode !== 200) return done(new Error('Returned ' + res.statusCode));
-    try {
-      return done(null, JSON.parse(body));
-    } catch(e) {
-      return done(e);
+  var opts = {
+    url: url,
+    timeout: 5000,
+    pool: {maxSockets: Infinity}
+  }
+  
+  request(opts, function(err, res, body) {
+    if (err) {
+      return done(err);
     }
+    
+    else if (res.statusCode === 504 || res.statusCode === 408) {
+      return (setTimeout(function() {
+        get(url, done);
+      }, 2500));
+    }
+    
+    else if (res.statusCode !== 200) {
+      return done(new Error('returned: '+res.statusCode));
+    }
+
+    else if (res.statusCode === 200 && body) {
+      try {
+        return done(null, JSON.parse(body));
+      } catch(e) {
+        return done(e);
+      }
+    }
+
+    else {
+      return done(new Error('no response'));
+    }
+
   });
 }
 
 
-exports.getBusRoutes = function(done) {
+
+
+exports.getBusRoutes = function getBusRoutes(done) {
   var route = '/Bus.svc/json/jRoutes?'
   get(this.url(route), function(err, data) {
     if (err) return done(err);
@@ -24,7 +50,7 @@ exports.getBusRoutes = function(done) {
 }
 
 
-exports.getBusStops = function(loc, radius, done) {
+exports.getBusStops = function getBusStops(loc, radius, done) {
   var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   get(this.url(route), function(err, data) {
     if (err) return done(err);
@@ -33,7 +59,7 @@ exports.getBusStops = function(loc, radius, done) {
 }
 
 
-exports.getBusScheduleByRoute = function(id, date, variation, done){
+exports.getBusScheduleByRoute = function getBusScheduleByRoute(id, date, variation, done){
   var route = '/Bus.svc/json/jRouteSchedule?routeId='+ id +'&date='+date+'&includingVariations='+variation +'&';
   get(this.url(route), function(err, data) {
     if (err) return done(err);
@@ -42,7 +68,7 @@ exports.getBusScheduleByRoute = function(id, date, variation, done){
 }
 
 
-exports.getBusRouteDetails = function(id, date, done){
+exports.getBusRouteDetails = function getBusRouteDetails(id, date, done){
   var route = '/Bus.svc/json/jRouteDetails?routeId='+id+'&date='+date+'&';
   get(this.url(route), function(err, data) {
     if (err) return done(err);
@@ -51,7 +77,7 @@ exports.getBusRouteDetails = function(id, date, done){
 }
 
 
-exports.getBusPositions = function(id, variation, loc, radius, done) {
+exports.getBusPositions = function getBusPositions(id, variation, loc, radius, done) {
   var route = '/Bus.svc/json/jBusPositions?routeId='+id+'&includingVariations='+variation+'&lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   get(this.url(route), function(err, data) {
     if (err) return done(err);
@@ -60,7 +86,7 @@ exports.getBusPositions = function(id, variation, loc, radius, done) {
 }
 
 
-exports.getBusScheduleByStop = function(id, date, done) {
+exports.getBusScheduleByStop = function getBusScheduleByStop(id, date, done) {
   var route = '/Bus.svc/json/jStopSchedule?stopId='+id+'&date='+date+'&';
   get(this.url(route), function(err, data) {
     if (err) return done(err);
@@ -69,7 +95,7 @@ exports.getBusScheduleByStop = function(id, date, done) {
 }
 
 
-exports.getBusPrediction = function(id, done) {
+exports.getBusPrediction = function getBusPrediction(id, done) {
   var route = '/NextBusService.svc/json/jPredictions?StopID='+id+'&';
   get(this.url(route), function(err, data) {
     if (err) return done(err);
@@ -77,7 +103,7 @@ exports.getBusPrediction = function(id, done) {
   });
 }
 
-exports.getClosestPrediction = function(loc, radius, limit, done) {
+exports.getClosestPrediction = function getClosestPrediction(loc, radius, limit, done) {
   var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   var self = this;
   get(this.url(route), function(err, data) {
@@ -103,22 +129,22 @@ exports.getClosestPrediction = function(loc, radius, limit, done) {
 }
 
 
-exports.getPredictionSeries = function(arr, done) {
-  var self = this;
-  async.mapSeries(arr, function(item, callback){
-    setTimeout(function() {
-      self.getBusPrediction(item, function(err, data) {
-        if (err) return callback(err);
-        if (data) {
-          return callback(null, {station: item, data: data.slice(0,3)});
-        }
-      });
-    }, 250);
-  }, function(err, results){
-    if (err) return done(err);
-    else return done(null, results);
-  });
-}
+// exports.getPredictionSeries = function(arr, done) {
+//   var self = this;
+//   async.mapSeries(arr, function(item, callback){
+//     setTimeout(function() {
+//       self.getBusPrediction(item, function(err, data) {
+//         if (err) return callback(err);
+//         if (data) {
+//           return callback(null, {name: itemstation: item, data: data.slice(0,3)});
+//         }
+//       });
+//     }, 250);
+//   }, function(err, results){
+//     if (err) return done(err);
+//     else return done(null, results);
+//   });
+// }
 
 
 

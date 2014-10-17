@@ -2,107 +2,108 @@ var should = require('chai').should();
 var Bus = require('../');
 var client = new Bus(process.env.KEY);
 
-var location = {
-  lat: 38.9059581,
-  lon: -77.0416805  
+var coordinates = {
+  lat: 0,
+  lon: 0  
 }
+var radius = 0;
 
-describe('Bus API', function() {
+var timeBetween = 1000;
 
-  it('.getBusRoutes', function(done) {
-    client.getBusRoutes(function(err, data) {
-      if (err) return done(err);
-      data.should.be.json;
-      data.length.should.be.above(2);
-      data[0].should.have.keys('Name', 'RouteID');
+
+
+describe('Base Bus API', function() {
+  
+  beforeEach(function(done) {
+    this.timeout(4000);
+    setTimeout(function() {
       return done();
-    });
+    }, 1000);
   });
 
-  it('.getBusStops', function(done) {
-    client.getBusStops(location, '500', function(err, data) {
+  it('#getBusroutes', function(done) {
+    client.getBusRoutes(function(err, res) {
       if (err) return done(err);
-      data.should.be.json;
-      data.length.should.be.above(2);
-      data[0].should.have.keys('Lat', 'Lon', 'Name', 'Routes', 'StopID');
+      res.should.be.an.array;
+      res.length.should.be.above(50);
       return done()
     });
   });
 
-  it('.getBusScheduleByRoute', function(done) {
-    client.getBusScheduleByRoute('16L', '2014-09-19', 'false', function(err, data) {
+  it('#getBusStops', function(done) {
+    this.timeout(8000);
+    client.getBusStops(coordinates, radius, function(err, res) {
       if (err) return done(err);
-      data.should.be.json;
-      data.Direction0.should.be.an.array;
-      data.Direction1.should.be.an.array;
-      data.Direction0[0].should.have.keys('DirectionNum', 'EndTime', 'RouteID', 'StartTime', 'StopTimes', 'TripDirectionText', 'TripHeadsign', 'TripID');
+      res.should.be.an.array;
+      res[0].StopID.should.eql('4000472');
+      res[1].StopID.should.eql('1003031');
+      res[2].StopID.should.eql('6000459');
+      res[3].StopID.should.eql('6000488');
+      res[4].StopID.should.eql('6000490');
       return done();
     });
   });
 
-  // it('.getBusRouteDetails', function(done) {
-  //   client.getBusRouteDetails('16L', '2014-09-19', function(err, data) {
-  //     if (err) return done(err);
-  //     data.should.be.json;
-  //     data.RouteID.should.eql('16L');
-  //     data.should.have.property('Direction0');
-  //     data.should.have.property('Direction1');
-  //     return done();
-  //   });
-  // });
-
-  // it('.getBusPositions', function(done) {
-  //   client.getBusPositions('10A', 'true', location, 500, function(err, data) {
-  //     if (err) return done(err);
-  //     data.should.be.json;
-  //     data.should.be.an.array;
-  //     return done();
-  //   });
-  // });
-
-  // it('.getBusScheduleByStop', function(done) {
-  //   client.getBusScheduleByStop('2000019', '2014-09-19', function(err, data) {
-  //     if (err) return done(err);
-  //     data.should.be.json;
-  //     data.should.have.property('ScheduleArrivals');
-  //     data.should.have.property('Stop');
-  //     data.ScheduleArrivals[0].should.have.keys('DirectionNum', 'EndTime', 'RouteID', 'ScheduleTime', 'StartTime', 'TripDirectionText', 'TripHeadsign', 'TripID');
-  //     return done();
-  //   });
-  // });
-
-  it('.getBusPrediction', function(done) {
-    client.getBusPrediction('1001343', function(err, data) {
+  it('#getBusScheduleByRoute', function(done) {
+    client.getBusScheduleByRoute('16L', '2014-09-19', 'false', function(err, res) {
       if (err) return done(err);
-      data.should.be.json;
-      data[0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID');
+      res.Direction0[0].RouteID.should.eql('16L');
+      res.Direction1[0].RouteID.should.eql('16L');
+      res.Name.should.eql('16L - 16L ANN-SKY CITY-PENT (521)')
       return done();
     });
   });
 
-  // it('.getClosestPrediction', function(done) {
-  //   this.timeout(5000);
-  //   client.getClosestPrediction(location, 500, 3, function(err, data) {
-  //     if (err) return done(err);
-  //     data.should.be.an.array;
-  //     data.length.should.be.eql(3);
-  //     return done();
-  //   });
-  // });
-  // 
-  it('.getSeries', function(done) {
-    this.timeout(60 * 5 * 1000);
-    client.getPredictionSeries(['1001343','1001334','1001352', '6000712', '6001310', '6000827', '5001986', '5001976', '5004706', '2000098', '2000096', '2001227'], function(err, data) {
+  it('#getBusRouteDetails', function(done) {
+    client.getBusRouteDetails('16L', '2014-09-19', function(err, res) {
       if (err) return done(err);
-      else {
-        console.log(data);
-        return done();
-      }
-    })
-  })
+      res.RouteID.should.eql('16L');
+      res.Name.should.eql('16L - 16L ANN-SKY CITY-PENT (521)');
+      res.Direction0.Shape[0].Lat.should.eql(38.869001795);
+      res.Direction0.Shape[0].Lon.should.eql(-77.05376549);
+      return done();
+    });
+  });
+
+  it('#getBusPositions', function(done) {
+    this.timeout(8000);
+    client.getBusPositions('10A', 'true', coordinates, radius, function(err, res) {
+      if (err) return done(err);
+      res.should.be.an.array;
+      res[0].should.have.keys('DateTime', 'Deviation', 'DirectionNum', 'DirectionText', 'Lat', 'Lon', 'RouteID', 'TripEndTime', 'TripHeadsign', 'TripID', 'TripStartTime', 'VehicleID');
+      return done();
+    });
+  });
+
+  it('#getBusScheduleByStop', function(done) {
+    client.getBusScheduleByStop('2000019', '2014-10-17', function(err, res) {
+      if (err) return done(err);
+      res.ScheduleArrivals[0].TripID.should.eql('6782663');
+      res.ScheduleArrivals[1].TripID.should.eql('6782670');
+      res.ScheduleArrivals[2].TripID.should.eql('6782664');
+      res.ScheduleArrivals[3].TripID.should.eql('6782665');
+      res.ScheduleArrivals[4].TripID.should.eql('6782666');
+      return done();  
+    });
+  });
+
+  it('#getBusPrediction', function(done) {
+    client.getBusPrediction('1001343', function(err, res) {
+      if (err) return done(err);
+      res.should.be.an.array;
+      res[0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID');
+      return done()
+    });
+  });
+});
 
 
 
 
+describe('Extended bus api', function() {
 
+  
+
+
+  
 });
