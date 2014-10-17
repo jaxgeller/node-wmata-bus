@@ -106,20 +106,19 @@ exports.getBusPrediction = function getBusPrediction(id, done) {
 exports.getClosestPrediction = function getClosestPrediction(loc, radius, limit, done) {
   var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   var self = this;
-  get(this.url(route), function(err, data) {
+  get(self.url(route), function(err, data) {
     if (err) return done(err);
     else {
-      try {
-        data = data.Stops.slice(0, limit);
-      } catch(e) {
-        return done(e);
-      }
-      async.map(data, function(stops, cb){
-        var route = '/NextBusService.svc/json/jPredictions?StopID='+stops.StopID+'&';
-        get(self.url(route), function(err, res) {
-          if (err) return cb(err);
-          else return cb(null, {name: stops.Name, data: res.Predictions});
-        });
+      async.map(data.Stops.slice(0, limit), function(stops, cb){
+        console.log(stops)
+        setTimeout(function() {
+          var route = '/NextBusService.svc/json/jPredictions?StopID='+stops.StopID+'&';
+          get(self.url(route), function(err, res) {
+            if (err) return cb(err);
+            else return cb(null, {name: stops.Name, data: res.Predictions});
+          });
+        }, 250);
+        
       }, function(e, r) {
         if (e) return done(e);
         else return done(null, r);
@@ -145,10 +144,3 @@ exports.getClosestPrediction = function getClosestPrediction(loc, radius, limit,
 //     else return done(null, results);
 //   });
 // }
-
-
-
-
-
-
-
