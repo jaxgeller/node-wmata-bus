@@ -2,11 +2,10 @@
 
 [![Build Status](https://travis-ci.org/jacksongeller/wmata-bus.js.svg?branch=master)](https://travis-ci.org/jacksongeller/wmata-bus.js)
 
----
 ## Install 
 `$ npm install wmata-bus-js --save`
 
----
+
 ## Use
 1. Get API key
 2. Init client
@@ -16,7 +15,6 @@ var Bus = require('wmata-bus-js');
 var client = new Bus('api key here');
 ```
 
----
 ## API
 
 ### getBusRoutes(done) 
