@@ -20,7 +20,8 @@ function get(url, done) {
     }
     
     else if (res.statusCode !== 200) {
-      return done(new Error('returned: '+res.statusCode));
+      var returnString = body.replace(/<..>/, '').replace(/<...>/,'');
+      return done(new Error(returnString));
     }
 
     else if (res.statusCode === 200 && body) {
@@ -39,7 +40,7 @@ function get(url, done) {
 }
 
 
-
+// Base
 
 exports.getBusRoutes = function getBusRoutes(done) {
   var route = '/Bus.svc/json/jRoutes?'
@@ -103,25 +104,38 @@ exports.getBusPrediction = function getBusPrediction(id, done) {
   });
 }
 
-exports.getClosestPrediction = function getClosestPrediction(loc, radius, limit, done) {
+
+// Fixme, way too messy
+
+exports.getClosestStationsPrediction = function getClosestStationsPrediction(loc, radius, limit, done) {
   var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   var self = this;
+
   get(self.url(route), function(err, data) {
-    if (err) return done(err);
+    if (err) {
+      return done(err);
+    }
     else {
-      async.map(data.Stops.slice(0, limit), function(stops, cb){
-        console.log(stops)
+      var listOfStations = data.Stops.slice(0, limit);
+      async.map(listOfStations, function(station, cb) {
         setTimeout(function() {
-          var route = '/NextBusService.svc/json/jPredictions?StopID='+stops.StopID+'&';
+          var route = '/NextBusService.svc/json/jPredictions?StopID='+station.StopID+'&';
           get(self.url(route), function(err, res) {
-            if (err) return cb(err);
-            else return cb(null, {name: stops.Name, data: res.Predictions});
+            if (err) {
+              return cb(err);
+            }
+            else {
+              return cb(null, {name: res.StopName, data: res.Predictions});
+            }
           });
         }, 250);
-        
-      }, function(e, r) {
-        if (e) return done(e);
-        else return done(null, r);
+      }, function(err, mappedData) {
+        if (err) {
+          return done(err);
+        }
+        else {
+          return done(null, mappedData);
+        }
       });
     }
   });
@@ -144,3 +158,12 @@ exports.getClosestPrediction = function getClosestPrediction(loc, radius, limit,
 //     else return done(null, results);
 //   });
 // }
+
+
+
+
+
+
+
+
+

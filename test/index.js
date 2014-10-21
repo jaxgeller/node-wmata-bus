@@ -1,13 +1,14 @@
 var should = require('chai').should();
 var Bus = require('../');
-var client = new Bus(process.env.KEY);
+
+// this is the free key
+var client = new Bus('rznpn5es76e8z3wsw44y4qut');
 
 var coordinates = {
   lat: 0,
   lon: 0  
 }
 var radius = 0;
-
 var timeBetween = 1000;
 
 
@@ -102,14 +103,27 @@ var timeBetween = 1000;
 
 describe('Extended bus api', function() {
 
-  it('#getClosestPrediction', function(done) {
+  beforeEach(function(done) {
+    this.timeout(4000);
+    setTimeout(function() {
+      return done();
+    }, 1000);
+  });
+
+  it('#getClosestStationsPrediction', function(done) {
     this.timeout(8000);
-    client.getClosestPrediction(coordinates, radius, 5, function(err, res) {
+    client.getClosestStationsPrediction(coordinates, radius, 5, function(err, res) {
       if (err) return done(err);
-      console.log(res);
+      res[0].name.should.be.eql('#1801 Beauregard St');
+      res[1].name.should.be.eql('#4805 Texas Ave Se');
+      res[2].name.should.be.eql('10th Rd + Livingston St');
+      res[3].name.should.be.eql('10th Rd + Madison St');
+      res[4].name.should.be.eql('10th Rd + Madison St');
       return done();
     });
   });
+
+  
 
 
 
