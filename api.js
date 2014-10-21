@@ -1,6 +1,8 @@
 var request = require('request');
 var async = require('async');
 
+// Private functions
+
 function get(url, done) {
   var opts = {
     url: url,
@@ -40,8 +42,14 @@ function get(url, done) {
 }
 
 
-// Base
+// Base functions
 
+
+/**
+ * Get all bus routes
+ * @param  {Function} done - callback(err, response)
+ * @return {Array}        - returns list of bus routes
+ */
 exports.getBusRoutes = function getBusRoutes(done) {
   var route = '/Bus.svc/json/jRoutes?'
   get(this.url(route), function(err, data) {
@@ -50,7 +58,13 @@ exports.getBusRoutes = function getBusRoutes(done) {
   });
 }
 
-
+/**
+ * Get all bus stops
+ * @param  {Object}   loc    - coordinates in object format loc.lat, loc.lon
+ * @param  {number}   radius - the radius in meters
+ * @param  {Function} done   - callback(err, response)
+ * @return {Array}           - returns list of bus stops
+ */
 exports.getBusStops = function getBusStops(loc, radius, done) {
   var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   get(this.url(route), function(err, data) {
@@ -59,7 +73,14 @@ exports.getBusStops = function getBusStops(loc, radius, done) {
   });
 }
 
-
+/**
+ * Get bus schedules by route
+ * @param  {String}   id        - Bust Route ID
+ * @param  {String}   date      - date in year-month-day format
+ * @param  {String}   variation - variation true or false, in string format
+ * @param  {Function} done      - callback(err, response)
+ * @return {Array}              - returns list schedule by routes
+ */
 exports.getBusScheduleByRoute = function getBusScheduleByRoute(id, date, variation, done){
   var route = '/Bus.svc/json/jRouteSchedule?routeId='+ id +'&date='+date+'&includingVariations='+variation +'&';
   get(this.url(route), function(err, data) {
@@ -68,7 +89,13 @@ exports.getBusScheduleByRoute = function getBusScheduleByRoute(id, date, variati
   })
 }
 
-
+/**
+ * Get bus route details
+ * @param  {String}   id   - bus route ID
+ * @param  {String}   date - date in year-month-day format
+ * @param  {Function} done - callback(err, response)
+ * @return {Array}        - returns list of bus route details
+ */
 exports.getBusRouteDetails = function getBusRouteDetails(id, date, done){
   var route = '/Bus.svc/json/jRouteDetails?routeId='+id+'&date='+date+'&';
   get(this.url(route), function(err, data) {
@@ -77,7 +104,15 @@ exports.getBusRouteDetails = function getBusRouteDetails(id, date, done){
   });
 }
 
-
+/**
+ * [getBusPositions description]
+ * @param  {String}   id        - Route ID
+ * @param  {String}   variation - bool in string format
+ * @param  {Object}   loc       - coordinates in object format loc.lat, loc.lon
+ * @param  {Number}   radius    - radius in meters of bus positions
+ * @param  {Function} done      - callback(err, response)
+ * @return {Array}              - returns list of bus positions
+ */
 exports.getBusPositions = function getBusPositions(id, variation, loc, radius, done) {
   var route = '/Bus.svc/json/jBusPositions?routeId='+id+'&includingVariations='+variation+'&lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   get(this.url(route), function(err, data) {
@@ -86,7 +121,13 @@ exports.getBusPositions = function getBusPositions(id, variation, loc, radius, d
   });
 }
 
-
+/**
+ * Get bus schedules by stops
+ * @param  {String}   id   - bus stopID
+ * @param  {String}   date - data in year-month-day format
+ * @param  {Function} done - callback(err, response)
+ * @return {[type]}        - returns list of schedules by stop
+ */
 exports.getBusScheduleByStop = function getBusScheduleByStop(id, date, done) {
   var route = '/Bus.svc/json/jStopSchedule?stopId='+id+'&date='+date+'&';
   get(this.url(route), function(err, data) {
@@ -95,7 +136,12 @@ exports.getBusScheduleByStop = function getBusScheduleByStop(id, date, done) {
   });
 }
 
-
+/**
+ * Get bus predictions
+ * @param  {String}   id   - bus stopID
+ * @param  {Function} done - callback(err, response)
+ * @return {Array}         - returns list of predictions
+ */
 exports.getBusPrediction = function getBusPrediction(id, done) {
   var route = '/NextBusService.svc/json/jPredictions?StopID='+id+'&';
   get(this.url(route), function(err, data) {
@@ -105,8 +151,19 @@ exports.getBusPrediction = function getBusPrediction(id, done) {
 }
 
 
-// Fixme, way too messy
 
+
+
+// Extended functions
+
+/**
+ * Get station predictions based on the closest stations given a location
+ * @param  {Object}   loc    - coordinates in object format loc.lat, loc.lon
+ * @param  {Number}   radius - radius in meters
+ * @param  {Number}   limit  - max amount of stations to include
+ * @param  {Function} done   - callback(err, response)
+ * @return {Array}           - returns list of bus station predictions, sorted by closest to location provided
+ */
 exports.getClosestStationsPrediction = function getClosestStationsPrediction(loc, radius, limit, done) {
   var route = '/Bus.svc/json/jStops?lat='+loc.lat+'&lon='+loc.lon+'&radius='+radius+'&';
   var self = this;
@@ -158,12 +215,3 @@ exports.getClosestStationsPrediction = function getClosestStationsPrediction(loc
 //     else return done(null, results);
 //   });
 // }
-
-
-
-
-
-
-
-
-
