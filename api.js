@@ -126,7 +126,7 @@ exports.getBusPositions = function getBusPositions(id, variation, loc, radius, d
  * @param  {String}   id   - bus stopID
  * @param  {String}   date - data in year-month-day format
  * @param  {Function} done - callback(err, response)
- * @return {[type]}        - returns list of schedules by stop
+ * @return {Array}        - returns list of schedules by stop
  */
 exports.getBusScheduleByStop = function getBusScheduleByStop(id, date, done) {
   var route = '/Bus.svc/json/jStopSchedule?stopId='+id+'&date='+date+'&';
@@ -199,7 +199,12 @@ exports.getClosestStationsPrediction = function getClosestStationsPrediction(loc
 }
 
 
-
+/**
+ * Get bus predictions, in a series. Great if you have a list of stations, and need to get predictions for all of them.
+ * @param  {Array}   arr    - list of station ids
+ * @param  {Function} done  - callback(err, response)
+ * @return {Array}          - returns list of corresponding predictions
+ */
 exports.getBusPredictionSeries = function getBusPredictionSeries(arr, done) {
   var self = this;
   async.mapSeries(arr, function(item, cb) {
@@ -222,20 +227,3 @@ exports.getBusPredictionSeries = function getBusPredictionSeries(arr, done) {
     }
   });
 }
-
-// exports.getPredictionSeries = function(arr, done) {
-//   var self = this;
-//   async.mapSeries(arr, function(item, callback){
-//     setTimeout(function() {
-//       self.getBusPrediction(item, function(err, data) {
-//         if (err) return callback(err);
-//         if (data) {
-//           return callback(null, {name: itemstation: item, data: data.slice(0,3)});
-//         }
-//       });
-//     }, 250);
-//   }, function(err, results){
-//     if (err) return done(err);
-//     else return done(null, results);
-//   });
-// }

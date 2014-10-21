@@ -1,24 +1,3 @@
-## wmata-bus-js
-
-[![Build Status](https://travis-ci.org/jacksongeller/wmata-bus.js.svg?branch=master)](https://travis-ci.org/jacksongeller/wmata-bus.js)
-
----
-## Install 
-`$ npm install wmata-bus-js --save`
-
----
-## Use
-1. Get API key
-2. Init client
-
-```js
-var Bus = require('wmata-bus-js');
-var client = new Bus('api key here');
-```
-
----
-## API
-
 ### getBusRoutes(done) 
 
 Get all bus routes
@@ -155,46 +134,14 @@ Get bus predictions, in a series. Great if you have a list of stations, and need
 
 
 
----
-### Examples
+* * *
 
-```js
-var Bus = require('wmata-bus-js');
-var client = new Bus('api key here');
-var location = {
-  lat: 41,
-  lon: 39
-}
 
-client.getBusRoutes(function(err, data) {
-  // do something with data
-});
 
-client.getBusStops(location, '500', function(err, data) {
-  // do something with data
-});
 
-client.getBusScheduleByRoute('16L', '2014-09-19', 'false', function(err, data) {
-  // do something with data
-});
 
-client.getBusRouteDetails('16L', '2014-09-19', function(err, data) {
-  // do something with data
-});
 
-client.getBusPositions('10A', 'true', location, 500, function(err, data) {
-  // do something with data
-});
 
-client.getBusScheduleByStop('2000019', '2014-09-19', function(err, data) {
-  // do something with data
-});
 
-client.getBusPrediction('1001343', function(err, data) {
-  // do something with data
-});
 
-client.getClosestPrediction(location, 500, 3, function(err, data) {
-  // do something with data
-});
-```
+
