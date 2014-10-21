@@ -1,8 +1,7 @@
 var should = require('chai').should();
 var Bus = require('../');
 
-// this is the free key
-var client = new Bus('rznpn5es76e8z3wsw44y4qut');
+var client = new Bus(process.env.KEY);
 
 var coordinates = {
   lat: 0,
@@ -132,7 +131,7 @@ describe('Extended bus api', function() {
       res[2].name.should.be.eql('1001352');
       res[3].name.should.be.eql('6000712');
       res[4].name.should.be.eql('6000818');
-      
+
       res[0].data[0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID')
       return done();
     });
