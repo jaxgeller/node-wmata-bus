@@ -157,7 +157,7 @@ exports.getBusPrediction = function getBusPrediction(id, done) {
 // Extended functions
 
 /**
- * Get station predictions based on the closest stations given a location
+ * Get station predictions based on the closest stations given a location. Great for getting predictions, without nowing the stations within a location. 
  * @param  {Object}   loc    - coordinates in object format loc.lat, loc.lon
  * @param  {Number}   radius - radius in meters
  * @param  {Number}   limit  - max amount of stations to include
@@ -198,6 +198,30 @@ exports.getClosestStationsPrediction = function getClosestStationsPrediction(loc
   });
 }
 
+
+
+exports.getBusPredictionSeries = function getBusPredictionSeries(arr, done) {
+  var self = this;
+  async.mapSeries(arr, function(item, cb) {
+    setTimeout(function() {
+      self.getBusPrediction(item, function(err, res) {
+        if (err) {
+          return cb(err);
+        }
+        else {
+          return cb(null, {name: item, data: res})
+        }
+      })
+    }, 250);
+  }, function(err, mappedData) {
+    if (err) {
+      return done(err);
+    }
+    else {
+      return done(null, mappedData);
+    }
+  });
+}
 
 // exports.getPredictionSeries = function(arr, done) {
 //   var self = this;

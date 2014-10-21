@@ -10,7 +10,7 @@ var coordinates = {
 }
 var radius = 0;
 var timeBetween = 1000;
-
+var listOfStations = ['1001343','1001334','1001352', '6000712', '6000818'];
 
 
 describe('Base Bus API', function() {
@@ -122,8 +122,22 @@ describe('Extended bus api', function() {
       return done();
     });
   });
-  
-  
+
+  it('#getBusPredictionSeries', function(done) {
+    this.timeout(8000);
+    client.getBusPredictionSeries(listOfStations, function(err, res) {
+      if (err) return done(err);
+      res[0].name.should.be.eql('1001343');
+      res[1].name.should.be.eql('1001334');
+      res[2].name.should.be.eql('1001352');
+      res[3].name.should.be.eql('6000712');
+      res[4].name.should.be.eql('6000818');
+      
+      res[0].data[0].should.have.keys('DirectionNum', 'DirectionText', 'Minutes', 'RouteID', 'TripID', 'VehicleID')
+      return done();
+    });
+  });
+
 
 
 

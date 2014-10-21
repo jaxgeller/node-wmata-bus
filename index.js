@@ -18,7 +18,7 @@ function Bus (key) {
   this.getBusScheduleByStop         = api.getBusScheduleByStop;
   this.getBusPrediction             = api.getBusPrediction;
   this.getClosestStationsPrediction = api.getClosestStationsPrediction;
-  this.getPredictionSeries          = api.getPredictionSeries;
+  this.getBusPredictionSeries       = api.getBusPredictionSeries;
 }
 
 module.exports = Bus;
