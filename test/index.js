@@ -136,8 +136,4 @@ describe('Extended bus api', function() {
       return done();
     });
   });
-
-
-
-
 });

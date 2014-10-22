@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/jacksongeller/wmata-bus.js.svg?branch=master)](https://travis-ci.org/jacksongeller/wmata-bus.js)
 
+## Looking for metro trains?
+Check out [this](https://github.com/jacksongeller/node-wmata-metro)
+
 ## Install 
 `$ npm install wmata-bus-js --save`
 
