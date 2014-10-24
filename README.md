@@ -6,7 +6,7 @@
 Check out [this](https://github.com/jacksongeller/node-wmata-metro)
 
 ## Install 
-`$ npm install wmata-bus-js --save`
+`$ npm install node-wmata-bus --save`
 
 
 ## Use
@@ -14,7 +14,7 @@ Check out [this](https://github.com/jacksongeller/node-wmata-metro)
 2. Init client
 
 ```js
-var Bus = require('wmata-bus-js');
+var Bus = require('node-wmata-bus');
 var client = new Bus('api key here');
 ```
 

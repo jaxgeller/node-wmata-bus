@@ -1,6 +1,6 @@
 {
-  "name": "wmata-bus-js",
-  "version": "1.4.1",
+  "name": "node-wmata-bus",
+  "version": "1.4.2",
   "description": "",
   "keywords": [
     "bus api",
@@ -25,6 +25,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jacksongeller/wmata-bus.js"
+    "url": "https://github.com/jacksongeller/node-wmata-bus"
   }
 }
